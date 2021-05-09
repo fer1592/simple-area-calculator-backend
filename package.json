@@ -1,0 +1,27 @@
+{
+  "name": "simple-area-calculator-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@ssh.dev.azure.com:v3/fer0592/simple-area-calculator-backend/simple-area-calculator-backend"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-validator": "^6.11.1",
+    "jest": "^26.6.3",
+    "supertest": "^6.1.3"
+  }
+}
