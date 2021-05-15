@@ -33,4 +33,35 @@ app.post('/triangle-area',
   }
 );
 
+app.post('/rectangle-area',
+  query('side1').exists().bail().notEmpty().bail().isFloat({ min: 0 }),
+  query('side2').exists().bail().notEmpty().bail().isFloat({ min: 0 }),
+  function(req,res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const side1 = parseFloat(req.query.side1,10);
+    const side2 = parseFloat(req.query.side2,10);
+
+    var area = side1 * side2
+
+    console.log(area);
+
+    if(area===Infinity){
+      res.status(400).send({
+        'errors': [{
+          'side1': req.query.side1,
+          'side2': req.query.side2,
+          'msg': 'At least one of the sides is too large, and area can\'t be calculated'
+        }]
+      });
+    } else{
+      res.send({
+        'area': area
+      });
+    };
+  }
+);
+
 module.exports = app;
