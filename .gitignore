@@ -1,3 +1,4 @@
 node_modules
 IaC/.terraform
 IaC/.terraform.lock.hcl
+IaC/terraform.tfstate*
