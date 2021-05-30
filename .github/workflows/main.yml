@@ -57,7 +57,7 @@ jobs:
       #    name: simple-area-calculator-backend-artifact
       - name: Checkout your repository under $GITHUB_WORKSPACE
         uses: actions/checkout@v2
-        
+
       - name: install terraform
         uses: hashicorp/setup-terraform@v1
 
@@ -70,4 +70,4 @@ jobs:
         run: |
           cd IaC/
           terraform init
-          terraform apply -var='env="dev"' -var='location="South Central US"' -auto-approve
+          terraform apply -var='env=dev' -var='location=South Central US' -auto-approve
