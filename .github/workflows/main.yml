@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [15.x,16.x]
+        node-version: [16.x]
     steps:
       - name: Checkout your repository under $GITHUB_WORKSPACE
         uses: actions/checkout@v2
@@ -41,11 +41,11 @@ jobs:
       - name: run tests
         run: npm test
 
-      - name: upload code as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-to-deploy
-          path: ./
+      #- name: upload code as artifact
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: code-to-deploy
+      #    path: ./
 
   dev-deployment:
     needs: build-and-test
@@ -61,5 +61,6 @@ jobs:
 
       - name: deploy resources using terraform
         run: |
+          cd IaC/
           terraform init
-          terraform apply -auto-approve
+          terraform apply -var='env="dev"' -var='location="South Central US"' -var='tenant_id="${{ ARM_TENANT_ID }}"' -var='subscription_id="${{ ARM_SUBSCRIPTION_ID }}"' -var='client_id="${{ ARM_CLIENT_ID }}"' -var='client_secret="${{ ARM_CLIENT_SECRET }}"' -auto-approve
