@@ -92,5 +92,5 @@ jobs:
 
       - uses: azure/webapps-deploy@v2
         with:
-          app-name: 'simple-area-calculator-dev'
+          app-name: 'simple-area-calculator-backend-app-service-dev'
           images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}'
