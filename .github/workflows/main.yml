@@ -41,11 +41,11 @@ jobs:
       - name: run tests
         run: npm test
 
-      #- name: upload code as artifact
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: code-to-deploy
-      #    path: ./
+      - name: upload code as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: simple-area-calculator-backend-artifact
+          path: ./
 
   dev-deployment:
     needs: build-and-test
@@ -56,6 +56,11 @@ jobs:
       ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: simple-area-calculator-backend-artifact
+
       - name: install terraform
         uses: hashicorp/setup-terraform@v1
 
