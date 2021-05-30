@@ -41,30 +41,30 @@ jobs:
       - name: run tests
         run: npm test
 
-      - name: upload code as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: simple-area-calculator-backend-artifact
-          path: ./
+      #- name: upload code as artifact
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: simple-area-calculator-backend-artifact
+      #    path: ./
 
   dev-deployment:
     needs: build-and-test
-    env:
-      ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: simple-area-calculator-backend-artifact
+      #- name: Download artifact
+      #  uses: actions/download-artifact@v2
+      #  with:
+      #    name: simple-area-calculator-backend-artifact
 
       - name: install terraform
         uses: hashicorp/setup-terraform@v1
 
       - name: deploy resources using terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
         run: |
           cd IaC/
           terraform init
