@@ -7,19 +7,6 @@ variable "location"{
   default = "South Central US"
 }
 
-variable "tenant_id" {
-  type = string
-}
-variable "subscription_id" {
-  type = string
-}
-variable "client_id" {
-  type = string
-}
-variable "client_secret" {
-  type = string
-}
-
 terraform {
   required_providers {
     azurerm = {
@@ -32,11 +19,6 @@ terraform {
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
   features {}
-  
-  subscription_id = "${ var.subscription_id }"
-  client_id       = "${ var.client_id }"
-  client_secret   = "${ var.client_secret }"
-  tenant_id       = "${ var.tenant_id }"
 }
 
 # Create a resource group
