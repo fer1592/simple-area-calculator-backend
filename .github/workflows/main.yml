@@ -84,3 +84,13 @@ jobs:
         run: |
           docker build . -t simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}
           docker push simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'simple-area-calculator-dev'
+          images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}'
