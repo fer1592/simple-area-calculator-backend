@@ -82,5 +82,5 @@ jobs:
       
       - name: build and push the docker image
         run: |
-          docker build . -t simpleAreaCalculatorBackendImage:${{ github.run_number }}
-          docker push simpleAreaCalculatorBackendImage:${{ github.run_number }}
+          docker build . -t simple-area-calculator-backend:${{ github.run_number }}
+          docker push simple-area-calculator-backend:${{ github.run_number }}
