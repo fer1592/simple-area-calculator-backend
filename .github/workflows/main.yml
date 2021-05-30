@@ -72,13 +72,13 @@ jobs:
           cd IaC/
           terraform init
           terraform apply -var='env=dev' -var='location=South Central US' -auto-approve
-          echo "{login-server}={$(terraform output container_registry_login_server | sed -e 's/"//g' )}" >> $GITHUB_ENV
-          echo "{username}={$(terraform output container_registry_username | sed -e 's/"//g')}" >> $GITHUB_ENV
-          echo "{password}={$(terraform output container_registry_password | sed -e 's/"//g')}" >> $GITHUB_ENV
+          echo "cr-login-server=$(terraform output container_registry_login_server | sed -e 's/"//g' )" >> $GITHUB_ENV
+          echo "cr-username=$(terraform output container_registry_username | sed -e 's/"//g')" >> $GITHUB_ENV
+          echo "cr-password=$(terraform output container_registry_password | sed -e 's/"//g')" >> $GITHUB_ENV
 
       - name: login into the azure container registry
         uses: azure/docker-login@v1
         with:
-          login-server: '${{ env.login-server }}'
-          username: '${{ env.username }}'
-          password: '${{ env.password }}'
+          login-server: '${{ env.cr-login-server }}'
+          username: '${{ env.cr-username }}'
+          password: '${{ env.cr-password }}'
