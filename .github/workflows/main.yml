@@ -72,19 +72,15 @@ jobs:
           cd IaC/
           terraform init
           terraform apply -var='env=dev' -var='location=South Central US' -auto-approve
-          echo 'CR_LOGIN_SERVER<<EOF' >> $GITHUB_ENV
-          terraform output container_registry_login_server | grep .io | grep -v "::" | sed -e 's/"//g' >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-          echo 'CR_USERNAME<<EOF' >> $GITHUB_ENV
-          terraform output container_registry_username | grep -v "::" | sed -e 's/"//g' >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-          echo 'CR_PASSWORD<<EOF' >> $GITHUB_ENV
-          terraform output container_registry_password | grep -v "::" | sed -e 's/"//g' >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
 
       - name: login into the azure container registry
         uses: azure/docker-login@v1
         with:
-          login-server: "::add-mask::'${{ env.CR_LOGIN_SERVER }}'"
-          username: "::add-mask::'${{ env.CR_USERNAME }}'"
-          password: "::add-mask::'${{ env.CR_PASSWORD }}'"
+          login-server: ${{ secrets.CR_LOGIN_SERVER }}
+          username: ${{ secrets.CR_USERNAME }}
+          password: ${{ secrets.CR_PASSWORD }}
+      
+      - name: build and push the docker image
+        run: |
+          docker build . -t simpleAreaCalculatorBackendImage:${{ github.run_number }}
+          docker push simpleAreaCalculatorBackendImage:${{ github.run_number }}
