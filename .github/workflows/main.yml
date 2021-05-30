@@ -72,7 +72,6 @@ jobs:
           cd IaC/
           terraform init
           terraform apply -var='env=dev' -var='location=South Central US' -auto-approve
-          CR_LOGIN_SERVER
           echo 'CR_LOGIN_SERVER<<EOF' >> $GITHUB_ENV
           terraform output container_registry_login_server | grep .io | grep -v "::" | sed -e 's/"//g' >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
