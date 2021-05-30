@@ -36,27 +36,29 @@ resource "azurerm_container_registry" "simple-area-calculator-backend-container-
 }
 
 resource "time_sleep" "wait_10_seconds" {
-  depends_on = [azurerm_container_registry.simple-area-calculator-backend-container-registry]
-
+  depends_on      = [azurerm_container_registry.simple-area-calculator-backend-container-registry]
   create_duration = "10s"
 }
 
 data "azurerm_container_registry" "simple-area-calculator-backend-container-registry" {
   name                = "simpleAreaCalculatorBackendContainerRegistry${ var.env != "production" ? "${ var.env }" : "" }"
   resource_group_name = azurerm_resource_group.simple-area-calulator-rg.name
-  depends_on = [time_sleep.wait_10_seconds]
+  depends_on          = [time_sleep.wait_10_seconds]
 }
 
 output "container_registry_login_server" {
-  value = data.azurerm_container_registry.simple-area-calculator-backend-container-registry.login_server
+  value     = data.azurerm_container_registry.simple-area-calculator-backend-container-registry.login_server
+  sensitive = true
 }
 
 output "container_registry_username" {
-  value = data.azurerm_container_registry.simple-area-calculator-backend-container-registry.admin_username
+  value     = data.azurerm_container_registry.simple-area-calculator-backend-container-registry.admin_username
+  sensitive = true
 }
 
 output "container_registry_password" {
-  value = data.azurerm_container_registry.simple-area-calculator-backend-container-registry.admin_password
+  value     = data.azurerm_container_registry.simple-area-calculator-backend-container-registry.admin_password
+  sensitive = true
 }
 
 resource "azurerm_app_service_plan" "simple-area-calculator-backend-app-service-plann" {
