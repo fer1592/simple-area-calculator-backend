@@ -73,13 +73,13 @@ jobs:
           terraform init
           terraform apply -var='env=dev' -var='location=South Central US' -auto-approve
           echo CR_LOGIN_SERVER<<EOF’ >> $GITHUB_ENV
-          terraform output container_registry_login_server | sed -e 's/"//g' >> $GITHUB_ENV
+          terraform output container_registry_login_server | grep .io | grep -v “::” | sed -e ‘s/"//g’ >> $GITHUB_ENV
           echo ‘EOF’ >> $GITHUB_ENV
           echo CR_USERNAME<<EOF’ >> $GITHUB_ENV
-          terraform output container_registry_username | sed -e 's/"//g' >> $GITHUB_ENV
+          terraform output container_registry_username | grep -v “::” | sed -e 's/"//g' >> $GITHUB_ENV
           echo ‘EOF’ >> $GITHUB_ENV
           echo CR_PASSWORD<<EOF’ >> $GITHUB_ENV
-          terraform output container_registry_password | sed -e 's/"//g' >> $GITHUB_ENV
+          terraform output container_registry_password | grep -v “::” | sed -e 's/"//g' >> $GITHUB_ENV
           echo ‘EOF’ >> $GITHUB_ENV
 
       - name: login into the azure container registry
