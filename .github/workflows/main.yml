@@ -94,3 +94,4 @@ jobs:
         with:
           app-name: 'simple-area-calculator-backend-app-service-dev'
           images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}'
+          startup-command: 'PORT=80 npm start'
