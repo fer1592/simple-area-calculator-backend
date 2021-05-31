@@ -72,7 +72,9 @@ jobs:
           cd IaC/
           terraform init
           terraform apply -var='env=dev' -var='location=South Central US' -auto-approve
-          echo "app_principal_id=$(terraform output -raw app-principal-id)" >> $GITHUB_ENV
+          echo 'app_principal_id<<EOF' >> $GITHUB_ENV
+          terraform output app-principal-id | grep -v "::" | sed -e 's/"//g' >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
       - name: login into the azure container registry
         uses: azure/docker-login@v1
