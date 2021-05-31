@@ -72,6 +72,7 @@ jobs:
           cd IaC/
           terraform init
           terraform apply -var='env=dev' -var='location=South Central US' -auto-approve
+          echo "app_principal_id=$(terraform output -raw app-principal-id)" >> $GITHUB_ENV
 
       - name: login into the azure container registry
         uses: azure/docker-login@v1
@@ -89,6 +90,13 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az role assignment create --assignee ${{ env.app_principal_id }} --scope /subscriptions/70566b9f-5c0d-4753-affe-74e6d67b11f7/resourceGroups/simple-area-calulator-backend-rg/providers/Microsoft.ContainerRegistry/registries/simpleAreaCalculatorBackendContainerRegistry --role "AcrPull"
 
       - uses: azure/webapps-deploy@v2
         with:
