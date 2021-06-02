@@ -82,8 +82,8 @@ jobs:
       
       - name: build and push the docker image
         run: |
-          docker build . -t simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}
-          docker push simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}
+          docker build . -t simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest
+          docker push simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest
 
       - name: 'Login via Azure CLI'
         uses: azure/login@v1
