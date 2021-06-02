@@ -7,6 +7,20 @@ variable "location"{
   default = "South Central US"
 }
 
+variable "containerRegistry" {
+  type = string
+  sensitive = true
+}
+
+variable "containerRegistryUser" {
+  type = string
+  sensitive = true
+}
+
+variable "containerRegistryPassword" {
+  type = string
+  sensitive = true
+}
 terraform {
   required_providers {
     azurerm = {
@@ -43,6 +57,14 @@ resource "azurerm_app_service" "simple-area-calculator-backend-app-service" {
   identity {
     type = "SystemAssigned"
   }
+  
+  app_settings = {
+    "DOCKER_REGISTRY_SERVER_URL" = "${ var.containerRegistry }"
+    "DOCKER_REGISTRY_SERVER_USERNAME" = "${ var.containerRegistryUser }"
+    "DOCKER_REGISTRY_SERVER_PASSWORD" = "${ var.containerRegistryPassword }"
+  }
+
+
 }
 
 output "app-principal-id" {

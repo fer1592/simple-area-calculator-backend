@@ -71,7 +71,7 @@ jobs:
         run: |
           cd IaC/
           terraform init
-          terraform apply -var='env=dev' -var='location=South Central US' -auto-approve
+          terraform apply -var='env=dev' -var='location=South Central US' -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' -auto-approve
 
       - name: login into the azure container registry
         uses: azure/docker-login@v1
@@ -101,4 +101,3 @@ jobs:
         with:
           app-name: 'simple-area-calculator-backend-app-service-dev'
           images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest'
-          startup-command: 'PORT=80 npm start'
