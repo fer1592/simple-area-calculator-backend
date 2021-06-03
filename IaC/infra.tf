@@ -7,6 +7,16 @@ variable "location"{
   default = "South Central US"
 }
 
+variable "appServicePlanTier" {
+  type = string
+  default = "Free"
+}
+
+variable "appServicePlanSize" {
+  type = string
+  default = "F1"
+}
+
 variable "containerRegistry" {
   type = string
   sensitive = true
@@ -43,8 +53,8 @@ resource "azurerm_app_service_plan" "simple-area-calculator-backend-app-service-
   reserved            = true
 
   sku {
-    tier = "Free"
-    size = "F1"
+    tier = "${ var.appServicePlanTier }"
+    size = "${ var.appServicePlanSize }"
   }
 }
 
