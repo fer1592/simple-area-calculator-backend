@@ -41,21 +41,13 @@ jobs:
       - name: run tests
         run: npm test
 
-      - name: upload code as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: simple-area-calculator-backend-artifact
-          path: ./
-
   dev-deployment:
     needs: build-and-test
     if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: simple-area-calculator-backend-artifact
+      - name: Checkout your repository under $GITHUB_WORKSPACE
+        uses: actions/checkout@v2
 
       - name: install terraform
         uses: hashicorp/setup-terraform@v1
@@ -133,10 +125,8 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: simple-area-calculator-backend-artifact
+      - name: Checkout your repository under $GITHUB_WORKSPACE
+        uses: actions/checkout@v2
 
       - name: install terraform
         uses: hashicorp/setup-terraform@v1
