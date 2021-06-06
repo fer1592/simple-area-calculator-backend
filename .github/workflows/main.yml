@@ -96,10 +96,10 @@ jobs:
           app-name: 'simple-area-calculator-backend-app-service-dev'
           images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest'
 
-      - name: Sleep for 20 minutes
+      - name: Sleep for 5 minutes
         uses: jakejarvis/wait-action@master
         with:
-          time: '20m'
+          time: '5m'
 
       - name: 'Test Api'
         uses: indiesdev/curl@v1
@@ -118,7 +118,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
         run: |
           cd IaC/
-          terraform destroy -var='env=dev' -var='location=South Central US' -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' -auto-approve
+          terraform destroy -var='env=dev' -var='location=South Central US' -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' -var='appServicePlanTier=Basic' -var='appServicePlanSize=B1' -auto-approve
 
   accpt-deployment:
     needs: dev-deployment
