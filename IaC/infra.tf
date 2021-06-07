@@ -91,10 +91,10 @@ resource "azurerm_app_service_slot" "simple-area-calculator-backend-app-service-
   app_service_plan_id = azurerm_app_service_plan.simple-area-calculator-backend-app-service-plann.id
   count = "${ var.env == "production" ? 1 : 0}"
   depends_on = [time_sleep.wait_30_seconds]
-}
-
-output "app-principal-id" {
-  value       = azurerm_app_service.simple-area-calculator-backend-app-service.identity.0.principal_id
-  sensitive   = true
-  depends_on  = [azurerm_app_service.simple-area-calculator-backend-app-service]
+  
+  app_settings = {
+    "DOCKER_REGISTRY_SERVER_URL" = "${ var.containerRegistry }"
+    "DOCKER_REGISTRY_SERVER_USERNAME" = "${ var.containerRegistryUser }"
+    "DOCKER_REGISTRY_SERVER_PASSWORD" = "${ var.containerRegistryPassword }"
+  }
 }

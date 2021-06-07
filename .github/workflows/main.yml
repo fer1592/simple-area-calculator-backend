@@ -253,14 +253,14 @@ jobs:
           images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest'
           slot-name: 'simple-area-calculator-backend-app-service-slot-staging'
 
-      - name: Sleep for 10 minutes
+      - name: Sleep for 20 minutes
         uses: jakejarvis/wait-action@master
         with:
-          time: '10m'
+          time: '20m'
 
       - name: Azure CLI script
         uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
           inlineScript: |
-            az webapp deployment slot swap -g simple-area-calulator-backend-rg -n simple-area-calculator-backend-app-service --slot staging --target-slot production
+            az webapp deployment slot swap -g simple-area-calulator-backend-rg -n simple-area-calculator-backend-app-service --slot simple-area-calculator-backend-app-service-slot-staging --target-slot simple-area-calculator-backend-app-service
