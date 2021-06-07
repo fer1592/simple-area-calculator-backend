@@ -183,6 +183,15 @@ jobs:
         with:
           time: '5m'
 
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            curl --fail --request POST 'https://simple-area-calculator-backend-app-service-accpt.azurewebsites.net/triangle-area?base=2&height=3' \
+              --header 'Content-Length: 0' || (az webapp restart -n simple-area-calculator-backend-app-service-accpt \
+              --resource-group simple-area-calulator-backend-rg && sleep 5m)
+
       - name: 'Test Api'
         uses: indiesdev/curl@v1
         with:
