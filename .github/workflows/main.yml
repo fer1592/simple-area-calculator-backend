@@ -11,202 +11,202 @@ on:
       - dev
   workflow_dispatch:
 jobs:
-  #build-and-test:
-  #  runs-on: ubuntu-latest
-  #  strategy:
-  #    matrix:
-  #      node-version: [16.x]
-  #  steps:
-  #    - name: Checkout your repository under $GITHUB_WORKSPACE
-  #      uses: actions/checkout@v2
-#
-  #    - name: Use Node.js ${{ matrix.node-version }}
-  #      uses: actions/setup-node@v1
-  #      with:
-  #        node-version: ${{ matrix.node-version }}
-#
-  #    - name: Install packages with ci, and finally test
-  #      run: npm ci
-#
-  #    - name: run custom work in package.json with run build
-  #      run: npm run build --if-present
-#
-  #    - name: syntax check over all .js files
-  #      run: |
-  #        for i in $(find -name '*.js' -not -path "./node_modules/*")
-  #        do 
-  #          node --check $i
-  #        done
-#
-  #    - name: run tests
-  #      run: npm test
-#
-  #dev-deployment:
-  #  needs: build-and-test
-  #  if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - name: Checkout your repository under $GITHUB_WORKSPACE
-  #      uses: actions/checkout@v2
-#
-  #    - name: install terraform
-  #      uses: hashicorp/setup-terraform@v1
-#
-  #    - name: deploy resources using terraform
-  #      env:
-  #        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-  #        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-  #        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-  #        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
-  #      run: |
-  #        cd IaC/
-  #        terraform init -reconfigure \
-  #          -backend-config="resource_group_name=${{ secrets.TF_STATE_RG }}" \
-  #          -backend-config="storage_account_name=${{ secrets.TF_STATE_SA }}" \
-  #          -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER }}" \
-  #          -backend-config="${{ secrets.TF_STATE_KEY }}"
-  #        terraform apply -var='env=dev' -var='location=South Central US' \
-  #          -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
-  #          -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
-  #          -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' -auto-approve
-#
-  #    - name: 'Login via Azure CLI'
-  #      uses: azure/login@v1
-  #      with:
-  #        creds: ${{ secrets.AZURE_CREDENTIALS }}
-  #    
-  #    - name: login into the azure container registry
-  #      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
-  #      uses: azure/docker-login@v1
-  #      with:
-  #        login-server: ${{ secrets.CR_LOGIN_SERVER }}
-  #        username: ${{ secrets.CR_USERNAME }}
-  #        password: ${{ secrets.CR_PASSWORD }}
-  #    
-  #    - name: build and push the docker image with the run number as tag, and the latest tag
-  #      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
-  #      run: |
-  #        docker build . -t simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}
-  #        docker push simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}
-  #        docker build . -t simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest
-  #        docker push simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest
-#
-  #    - name: Azure CLI script
-  #      uses: azure/CLI@v1
-  #      with:
-  #        azcliversion: 2.0.72
-  #        inlineScript: |
-  #          az role assignment create --assignee $(az webapp identity show -n simple-area-calculator-backend-app-service-dev --resource-group simple-area-calulator-backend-rg | jq -r '.principalId') --scope /subscriptions/70566b9f-5c0d-4753-affe-74e6d67b11f7/resourceGroups/simple-area-calulator-backend-rg/providers/Microsoft.ContainerRegistry/registries/simpleAreaCalculatorBackendContainerRegistry --role "AcrPull"
-#
-  #    - uses: azure/webapps-deploy@v2
-  #      with:
-  #        app-name: 'simple-area-calculator-backend-app-service-dev'
-  #        images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest'
-#
-  #    - name: Sleep for 25 minutes
-  #      uses: jakejarvis/wait-action@master
-  #      with:
-  #        time: '25m'
-#
-  #    - name: 'Test Api'
-  #      uses: indiesdev/curl@v1
-  #      with:
-  #        url: https://simple-area-calculator-backend-app-service-dev.azurewebsites.net/triangle-area
-  #        method: 'POST'
-  #        accept: 200,201,204
-  #        headers: '{ "Content-Length": "0" }'
-  #        params: '{ "base": "2", "height": "3" }'
-#
-  #    - name: destroy the dev environment using terraform
-  #      env:
-  #        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-  #        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-  #        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-  #        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
-  #      run: |
-  #        cd IaC/
-  #        terraform destroy -var='env=dev' -var='location=South Central US' \
-  #          -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
-  #          -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
-  #          -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' -auto-approve
-#
-  #accpt-deployment:
-  #  needs: dev-deployment
-  #  if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - name: Checkout your repository under $GITHUB_WORKSPACE
-  #      uses: actions/checkout@v2
-#
-  #    - name: install terraform
-  #      uses: hashicorp/setup-terraform@v1
-#
-  #    - name: deploy resources using terraform
-  #      env:
-  #        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-  #        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-  #        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-  #        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
-  #      run: |
-  #        cd IaC/
-  #        terraform init -reconfigure \
-  #          -backend-config="resource_group_name=${{ secrets.TF_STATE_RG }}" \
-  #          -backend-config="storage_account_name=${{ secrets.TF_STATE_SA }}" \
-  #          -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER }}" \
-  #          -backend-config="${{ secrets.TF_STATE_KEY }}"
-  #        terraform apply -var='env=accpt' -var='location=South Central US' \
-  #          -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
-  #          -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
-  #          -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' \
-  #          -var='appServicePlanTier=Basic' -var='appServicePlanSize=B1' -auto-approve
-#
-  #    - name: 'Login via Azure CLI'
-  #      uses: azure/login@v1
-  #      with:
-  #        creds: ${{ secrets.AZURE_CREDENTIALS }}
-#
-  #    - name: Azure CLI script
-  #      uses: azure/CLI@v1
-  #      with:
-  #        azcliversion: 2.0.72
-  #        inlineScript: |
-  #          az role assignment create --assignee $(az webapp identity show -n simple-area-calculator-backend-app-service-accpt --resource-group simple-area-calulator-backend-rg | jq -r '.principalId') --scope /subscriptions/70566b9f-5c0d-4753-affe-74e6d67b11f7/resourceGroups/simple-area-calulator-backend-rg/providers/Microsoft.ContainerRegistry/registries/simpleAreaCalculatorBackendContainerRegistry --role "AcrPull"
-#
-  #    - uses: azure/webapps-deploy@v2
-  #      with:
-  #        app-name: 'simple-area-calculator-backend-app-service-accpt'
-  #        images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest'
-#
-  #    - name: Sleep for 10 minutes
-  #      uses: jakejarvis/wait-action@master
-  #      with:
-  #        time: '10m'
-#
-  #    - name: 'Test Api'
-  #      uses: indiesdev/curl@v1
-  #      with:
-  #        url: https://simple-area-calculator-backend-app-service-accpt.azurewebsites.net/triangle-area
-  #        method: 'POST'
-  #        accept: 200,201,204
-  #        headers: '{ "Content-Length": "0" }'
-  #        params: '{ "base": "2", "height": "3" }'
-#
-  #    - name: destroy the accpt environment using terraform
-  #      env:
-  #        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-  #        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-  #        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-  #        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
-  #      run: |
-  #        cd IaC/
-  #        terraform destroy -var='env=accpt' -var='location=South Central US' \
-  #          -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
-  #          -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
-  #          -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' \
-  #          -var='appServicePlanTier=Basic' -var='appServicePlanSize=B1' -auto-approve
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Checkout your repository under $GITHUB_WORKSPACE
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install packages with ci, and finally test
+        run: npm ci
+
+      - name: run custom work in package.json with run build
+        run: npm run build --if-present
+
+      - name: syntax check over all .js files
+        run: |
+          for i in $(find -name '*.js' -not -path "./node_modules/*")
+          do 
+            node --check $i
+          done
+
+      - name: run tests
+        run: npm test
+
+  dev-deployment:
+    needs: build-and-test
+    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository under $GITHUB_WORKSPACE
+        uses: actions/checkout@v2
+
+      - name: install terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: deploy resources using terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        run: |
+          cd IaC/
+          terraform init -reconfigure \
+            -backend-config="resource_group_name=${{ secrets.TF_STATE_RG }}" \
+            -backend-config="storage_account_name=${{ secrets.TF_STATE_SA }}" \
+            -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER }}" \
+            -backend-config="${{ secrets.TF_STATE_KEY }}"
+          terraform apply -var='env=dev' -var='location=South Central US' \
+            -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
+            -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
+            -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' -auto-approve
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: login into the azure container registry
+        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.CR_LOGIN_SERVER }}
+          username: ${{ secrets.CR_USERNAME }}
+          password: ${{ secrets.CR_PASSWORD }}
+      
+      - name: build and push the docker image with the run number as tag, and the latest tag
+        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
+        run: |
+          docker build . -t simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}
+          docker push simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:${{ github.run_number }}
+          docker build . -t simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest
+          docker push simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az role assignment create --assignee $(az webapp identity show -n simple-area-calculator-backend-app-service-dev --resource-group simple-area-calulator-backend-rg | jq -r '.principalId') --scope /subscriptions/70566b9f-5c0d-4753-affe-74e6d67b11f7/resourceGroups/simple-area-calulator-backend-rg/providers/Microsoft.ContainerRegistry/registries/simpleAreaCalculatorBackendContainerRegistry --role "AcrPull"
+
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'simple-area-calculator-backend-app-service-dev'
+          images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest'
+
+      - name: Sleep for 25 minutes
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '25m'
+
+      - name: 'Test Api'
+        uses: indiesdev/curl@v1
+        with:
+          url: https://simple-area-calculator-backend-app-service-dev.azurewebsites.net/triangle-area
+          method: 'POST'
+          accept: 200,201,204
+          headers: '{ "Content-Length": "0" }'
+          params: '{ "base": "2", "height": "3" }'
+
+      - name: destroy the dev environment using terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        run: |
+          cd IaC/
+          terraform destroy -var='env=dev' -var='location=South Central US' \
+            -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
+            -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
+            -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' -auto-approve
+
+  accpt-deployment:
+    needs: dev-deployment
+    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository under $GITHUB_WORKSPACE
+        uses: actions/checkout@v2
+
+      - name: install terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: deploy resources using terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        run: |
+          cd IaC/
+          terraform init -reconfigure \
+            -backend-config="resource_group_name=${{ secrets.TF_STATE_RG }}" \
+            -backend-config="storage_account_name=${{ secrets.TF_STATE_SA }}" \
+            -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER }}" \
+            -backend-config="${{ secrets.TF_STATE_KEY }}"
+          terraform apply -var='env=accpt' -var='location=South Central US' \
+            -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
+            -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
+            -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' \
+            -var='appServicePlanTier=Basic' -var='appServicePlanSize=B1' -auto-approve
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az role assignment create --assignee $(az webapp identity show -n simple-area-calculator-backend-app-service-accpt --resource-group simple-area-calulator-backend-rg | jq -r '.principalId') --scope /subscriptions/70566b9f-5c0d-4753-affe-74e6d67b11f7/resourceGroups/simple-area-calulator-backend-rg/providers/Microsoft.ContainerRegistry/registries/simpleAreaCalculatorBackendContainerRegistry --role "AcrPull"
+
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'simple-area-calculator-backend-app-service-accpt'
+          images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest'
+
+      - name: Sleep for 20 minutes
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '20m'
+
+      - name: 'Test Api'
+        uses: indiesdev/curl@v1
+        with:
+          url: https://simple-area-calculator-backend-app-service-accpt.azurewebsites.net/triangle-area
+          method: 'POST'
+          accept: 200,201,204
+          headers: '{ "Content-Length": "0" }'
+          params: '{ "base": "2", "height": "3" }'
+
+      - name: destroy the accpt environment using terraform
+        env:
+          ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+        run: |
+          cd IaC/
+          terraform destroy -var='env=accpt' -var='location=South Central US' \
+            -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
+            -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
+            -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' \
+            -var='appServicePlanTier=Basic' -var='appServicePlanSize=B1' -auto-approve
 
   prod-deployment:
-    #needs: accpt-deployment
+    needs: accpt-deployment
     if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cd-pipeline' }}
     runs-on: ubuntu-latest
     steps:
@@ -263,4 +263,4 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: |
-            az webapp deployment slot swap -g simple-area-calulator-backend-rg -n simple-area-calculator-backend-app-service --slot simple-area-calculator-backend-app-service-slot-staging --target-slot simple-area-calculator-backend-app-service
+            az webapp deployment slot swap -g simple-area-calulator-backend-rg -n simple-area-calculator-backend-app-service --slot simple-area-calculator-backend-app-service-slot-staging

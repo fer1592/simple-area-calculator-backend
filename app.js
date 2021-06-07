@@ -27,7 +27,8 @@ app.post('/triangle-area',
       });
     } else{
       res.send({
-        'area': area
+        'area': area,
+        'version': 'new'
       });
     };
   }
@@ -58,7 +59,8 @@ app.post('/rectangle-area',
       });
     } else{
       res.send({
-        'area': area
+        'area': area,
+        'version': 'new'
       });
     };
   }
