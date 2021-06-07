@@ -68,7 +68,8 @@ jobs:
           terraform apply -var='env=dev' -var='location=South Central US' \
             -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
             -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
-            -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' -auto-approve
+            -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' \
+            -var='appServicePlanTier=Basic' -var='appServicePlanSize=B1' -auto-approve
 
       - name: 'Login via Azure CLI'
         uses: azure/login@v1
@@ -103,10 +104,10 @@ jobs:
           app-name: 'simple-area-calculator-backend-app-service-dev'
           images: 'simpleareacalculatorbackendcontainerregistry.azurecr.io/simple-area-calculator-backend:latest'
 
-      - name: Sleep for 25 minutes
+      - name: Sleep for 20 minutes
         uses: jakejarvis/wait-action@master
         with:
-          time: '25m'
+          time: '20m'
 
       - name: 'Test Api'
         uses: indiesdev/curl@v1
