@@ -31,7 +31,10 @@ variable "containerRegistryPassword" {
   type = string
   sensitive = true
 }
+
 terraform {
+  backend "azurerm" {}
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -73,8 +76,21 @@ resource "azurerm_app_service" "simple-area-calculator-backend-app-service" {
     "DOCKER_REGISTRY_SERVER_USERNAME" = "${ var.containerRegistryUser }"
     "DOCKER_REGISTRY_SERVER_PASSWORD" = "${ var.containerRegistryPassword }"
   }
+}
 
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [azurerm_app_service.simple-area-calculator-backend-app-service]
+  create_duration = "30s"
+}
 
+resource "azurerm_app_service_slot" "simple-area-calculator-backend-app-service-slot-staging" {
+  name                = "simple-area-calculator-backend-app-service-slot-staging"
+  app_service_name    = azurerm_app_service.simple-area-calculator-backend-app-service.name
+  location            = "${ var.location }"
+  resource_group_name = "simple-area-calulator-backend-rg"
+  app_service_plan_id = azurerm_app_service_plan.simple-area-calculator-backend-app-service-plann.id
+  count = "${ var.env == "production" ? 1 : 0}"
+  depends_on = [time_sleep.wait_30_seconds]
 }
 
 output "app-principal-id" {
