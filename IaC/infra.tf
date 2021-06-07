@@ -70,6 +70,10 @@ resource "azurerm_app_service" "simple-area-calculator-backend-app-service" {
   identity {
     type = "SystemAssigned"
   }
+
+  site_config {
+    always_on = true
+  }
   
   app_settings = {
     "DOCKER_REGISTRY_SERVER_URL" = "${ var.containerRegistry }"
@@ -91,6 +95,10 @@ resource "azurerm_app_service_slot" "simple-area-calculator-backend-app-service-
   app_service_plan_id = azurerm_app_service_plan.simple-area-calculator-backend-app-service-plann.id
   count = "${ var.env == "production" ? 1 : 0}"
   depends_on = [time_sleep.wait_30_seconds]
+  
+  site_config {
+    always_on = true
+  }
   
   app_settings = {
     "DOCKER_REGISTRY_SERVER_URL" = "${ var.containerRegistry }"
