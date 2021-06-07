@@ -64,7 +64,7 @@ jobs:
             -backend-config="resource_group_name=${{ secrets.TF_STATE_RG }}" \
             -backend-config="storage_account_name=${{ secrets.TF_STATE_SA }}" \
             -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER }}" \
-            -backend-config="${{ secrets.TF_STATE_KEY }}"
+            -backend-config="key=${{ secrets.TF_STATE_KEY }}"
           terraform apply -var='env=dev' -var='location=South Central US' \
             -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
             -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
@@ -153,7 +153,7 @@ jobs:
             -backend-config="resource_group_name=${{ secrets.TF_STATE_RG }}" \
             -backend-config="storage_account_name=${{ secrets.TF_STATE_SA }}" \
             -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER }}" \
-            -backend-config="${{ secrets.TF_STATE_KEY }}"
+            -backend-config="key=${{ secrets.TF_STATE_KEY }}"
           terraform apply -var='env=accpt' -var='location=South Central US' \
             -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
             -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
