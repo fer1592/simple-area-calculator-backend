@@ -68,8 +68,7 @@ jobs:
           terraform apply -var='env=dev' -var='location=South Central US' \
             -var='containerRegistry=${{ secrets.CR_LOGIN_SERVER }}' \
             -var='containerRegistryUser=${{ secrets.CR_USERNAME }}' \
-            -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' \
-            -var='appServicePlanTier=Basic' -var='appServicePlanSize=B1' -auto-approve
+            -var='containerRegistryPassword=${{ secrets.CR_PASSWORD }}' -auto-approve
 
       - name: 'Login via Azure CLI'
         uses: azure/login@v1
