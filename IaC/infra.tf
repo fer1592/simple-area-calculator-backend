@@ -61,20 +61,29 @@ resource "azurerm_app_service_plan" "simple-area-calculator-backend-app-service-
   }
 }
 
+resource "time_sleep" "wait_15_seconds_after_app_service_plann" {
+  depends_on = [azurerm_app_service_plan.simple-area-calculator-backend-app-service-plann]
+  create_duration = "15s"
+}
+
 resource "azurerm_app_service" "simple-area-calculator-backend-app-service" {
   name                = "simple-area-calculator-backend-app-service${ var.env != "production" ? "-${ var.env }" : "" }"
   location            = "${ var.location }"
   resource_group_name = "simple-area-calulator-backend-rg"
   app_service_plan_id = azurerm_app_service_plan.simple-area-calculator-backend-app-service-plann.id
+  depends_on = [time_sleep.wait_15_seconds_after_app_service_plann]
 
   identity {
     type = "SystemAssigned"
   }
 
-  site_config {
-    always_on = true
+  dynamic "site_config" {
+    for_each = var.appServicePlanTier == "Free" ? [] : [1]
+    content {
+      always_on = true
+    }
   }
-  
+
   app_settings = {
     "DOCKER_REGISTRY_SERVER_URL" = "${ var.containerRegistry }"
     "DOCKER_REGISTRY_SERVER_USERNAME" = "${ var.containerRegistryUser }"
@@ -82,9 +91,9 @@ resource "azurerm_app_service" "simple-area-calculator-backend-app-service" {
   }
 }
 
-resource "time_sleep" "wait_30_seconds" {
+resource "time_sleep" "wait_15_seconds_after_app_service" {
   depends_on = [azurerm_app_service.simple-area-calculator-backend-app-service]
-  create_duration = "30s"
+  create_duration = "15s"
 }
 
 resource "azurerm_app_service_slot" "simple-area-calculator-backend-app-service-slot-staging" {
@@ -94,12 +103,12 @@ resource "azurerm_app_service_slot" "simple-area-calculator-backend-app-service-
   resource_group_name = "simple-area-calulator-backend-rg"
   app_service_plan_id = azurerm_app_service_plan.simple-area-calculator-backend-app-service-plann.id
   count = "${ var.env == "production" ? 1 : 0}"
-  depends_on = [time_sleep.wait_30_seconds]
+  depends_on = [time_sleep.wait_15_seconds_after_app_service]
   
   site_config {
     always_on = true
   }
-  
+
   app_settings = {
     "DOCKER_REGISTRY_SERVER_URL" = "${ var.containerRegistry }"
     "DOCKER_REGISTRY_SERVER_USERNAME" = "${ var.containerRegistryUser }"

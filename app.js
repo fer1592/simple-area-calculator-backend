@@ -60,7 +60,7 @@ app.post('/rectangle-area',
     } else{
       res.send({
         'area': area,
-        'version': 'new'
+        'version': 'more new'
       });
     };
   }
